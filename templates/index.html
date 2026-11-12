@@ -1,0 +1,490 @@
+{% extends "base.html" %}
+
+{% block title %}CLARIO – One Intelligent Workspace. Endless Possibilities.{% endblock %}
+
+{% block public_content %}
+<div class="bg-white">
+    <!-- 1. NAVIGATION BAR -->
+    <nav class="navbar navbar-expand-lg navbar-light py-3 border-bottom sticky-top bg-white">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center gap-2" href="/">
+                <div class="d-flex align-items-center justify-content-center rounded-3 bg-primary text-white" style="width: 38px; height: 38px;">
+                    <i data-lucide="shield-check" style="width: 22px; height: 22px;"></i>
+                </div>
+                <span class="fs-4 fw-bold tracking-tight text-dark">CLARIO</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#landingNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="landingNav">
+                <ul class="navbar-nav mx-auto mb-2 mb-lg-0 gap-3 fw-medium">
+                    <li class="nav-item"><a class="nav-link text-secondary" href="#features">Features</a></li>
+                    <li class="nav-item"><a class="nav-link text-secondary" href="#agents">Multi-Agent AI</a></li>
+                    <li class="nav-item"><a class="nav-link text-secondary" href="#how-it-works">How It Works</a></li>
+                    <li class="nav-item"><a class="nav-link text-secondary" href="#pricing">Pricing</a></li>
+                    <li class="nav-item"><a class="nav-link text-secondary" href="#security">Security</a></li>
+                    <li class="nav-item"><a class="nav-link text-secondary" href="#faq">FAQ</a></li>
+                </ul>
+                <div class="d-flex align-items-center gap-2">
+                    <a href="{{ url_for('auth.login') }}" class="btn btn-clario-outline px-3">Sign In</a>
+                    <a href="{{ url_for('auth.register') }}" class="btn btn-clario-primary px-3">Get Started</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 2. HERO SECTION -->
+    <section class="py-5 bg-light position-relative overflow-hidden border-bottom">
+        <div class="container py-lg-5">
+            <div class="row align-items-center gy-5">
+                <div class="col-lg-7">
+                    <div class="d-inline-flex align-items-center gap-2 px-3 py-1 bg-white rounded-pill border shadow-sm mb-4">
+                        <span class="badge bg-primary text-white rounded-pill">Next-Gen AI</span>
+                        <span class="small text-secondary fw-semibold">Unified Workspace & Payment Security</span>
+                    </div>
+                    <h1 class="display-4 fw-extrabold text-dark tracking-tight mb-3" style="line-height: 1.15;">
+                        One Intelligent Workspace. <br>
+                        <span class="gradient-text">Endless Possibilities.</span>
+                    </h1>
+                    <p class="lead text-secondary mb-4 fs-5" style="max-width: 600px;">
+                        Analyze documents, manage communications, and protect financial transactions with the power of AI.
+                    </p>
+                    <div class="d-flex flex-wrap gap-3 mb-4">
+                        <a href="{{ url_for('auth.register') }}" class="btn btn-clario-primary btn-lg px-4 py-3 shadow-sm d-flex align-items-center gap-2">
+                            <span>Get Started Free</span>
+                            <i data-lucide="arrow-right" style="width: 18px; height: 18px;"></i>
+                        </a>
+                        <a href="#features" class="btn btn-clario-outline btn-lg px-4 py-3">
+                            Explore Features
+                        </a>
+                    </div>
+                    <div class="d-flex align-items-center gap-4 text-muted small">
+                        <span class="d-flex align-items-center gap-1"><i data-lucide="check" class="text-success" style="width:16px;"></i> Free tier available</span>
+                        <span class="d-flex align-items-center gap-1"><i data-lucide="check" class="text-success" style="width:16px;"></i> PayPal Sandbox verified</span>
+                        <span class="d-flex align-items-center gap-1"><i data-lucide="check" class="text-success" style="width:16px;"></i> No credit card needed</span>
+                    </div>
+                </div>
+
+                <div class="col-lg-5">
+                    <!-- Interactive Visual Mockup Card -->
+                    <div class="card border shadow-lg rounded-4 p-4 bg-white position-relative">
+                        <div class="d-flex align-items-center justify-content-between pb-3 border-bottom mb-3">
+                            <div class="d-flex align-items-center gap-2">
+                                <span class="rounded-circle bg-danger" style="width:10px;height:10px;display:inline-block;"></span>
+                                <span class="rounded-circle bg-warning" style="width:10px;height:10px;display:inline-block;"></span>
+                                <span class="rounded-circle bg-success" style="width:10px;height:10px;display:inline-block;"></span>
+                                <span class="fw-bold small ms-2 text-dark">CLARIO Autonomous Matrix</span>
+                            </div>
+                            <span class="badge badge-soft-primary">Live Demo</span>
+                        </div>
+                        
+                        <div class="p-3 bg-light rounded-3 border mb-3">
+                            <div class="small fw-semibold text-secondary mb-1">Global AI Command:</div>
+                            <div class="text-dark fw-bold small">"Audit cross-border vendor payments and draft reply for invoice #94021"</div>
+                        </div>
+
+                        <div class="space-y-2">
+                            <div class="p-2 border rounded-3 bg-white mb-2 d-flex align-items-center justify-content-between">
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="p-2 bg-primary-subtle text-primary rounded"><i data-lucide="file-text" style="width:16px;height:16px;"></i></div>
+                                    <span class="small fw-semibold">Document Agent</span>
+                                </div>
+                                <span class="badge bg-success-subtle text-success">PDF Indexed</span>
+                            </div>
+                            <div class="p-2 border rounded-3 bg-white mb-2 d-flex align-items-center justify-content-between">
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="p-2 bg-danger-subtle text-danger rounded"><i data-lucide="shield-alert" style="width:16px;height:16px;"></i></div>
+                                    <span class="small fw-semibold">Security AI</span>
+                                </div>
+                                <span class="badge bg-danger-subtle text-danger">IsolationForest Flag</span>
+                            </div>
+                            <div class="p-2 border rounded-3 bg-white d-flex align-items-center justify-content-between">
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="p-2 bg-purple-subtle text-purple rounded" style="background:#F5F3FF; color:#7C3AED;"><i data-lucide="mail" style="width:16px;height:16px;"></i></div>
+                                    <span class="small fw-semibold">Email Assistant</span>
+                                </div>
+                                <span class="badge bg-primary-subtle text-primary">Tone Draft Ready</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3. PRODUCT INTRODUCTION -->
+    <section class="py-5">
+        <div class="container py-4 text-center">
+            <span class="badge badge-soft-primary text-uppercase px-3 py-1 mb-2">The Problem & The Solution</span>
+            <h2 class="fw-bold fs-2 text-dark mb-3">Eliminate Fragmented Tools with One Cohesive AI OS</h2>
+            <p class="text-secondary mx-auto" style="max-width: 720px;">
+                Modern knowledge workers waste hours switching between document analyzers, inbox clients, and disconnected fraud detection dashboards. CLARIO unifies all three mission-critical domains into a synchronized, multi-agent AI ecosystem.
+            </p>
+        </div>
+    </section>
+
+    <!-- 4. THREE MAIN FEATURE SECTIONS -->
+    <section class="py-5 bg-light border-top border-bottom" id="features">
+        <div class="container">
+            <div class="row g-4">
+                <!-- Module A -->
+                <div class="col-md-4">
+                    <div class="clario-card h-100 clario-card-hover">
+                        <div class="d-inline-flex p-3 rounded-3 bg-primary text-white mb-3 shadow-sm">
+                            <i data-lucide="file-search" style="width: 24px; height: 24px;"></i>
+                        </div>
+                        <h4 class="fw-bold text-dark mb-2">A. CLARIO AI Workspace</h4>
+                        <p class="text-secondary small mb-3">
+                            Drag-and-drop document intelligence supporting PDF, DOCX, TXT, and CSV. Context-grounded Q&A strictly citing uploaded file content, automated summaries, key date tracking, and instant CSV charting.
+                        </p>
+                        <ul class="list-unstyled small text-secondary space-y-1 mb-0">
+                            <li><i data-lucide="check" class="text-primary me-1" style="width:14px;"></i> Multi-format text extraction</li>
+                            <li><i data-lucide="check" class="text-primary me-1" style="width:14px;"></i> Grounded contextual queries</li>
+                            <li><i data-lucide="check" class="text-primary me-1" style="width:14px;"></i> Automated Chart.js CSV analytics</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Module B -->
+                <div class="col-md-4">
+                    <div class="clario-card h-100 clario-card-hover">
+                        <div class="d-inline-flex p-3 rounded-3 text-white mb-3 shadow-sm" style="background-color: var(--clario-violet);">
+                            <i data-lucide="mail-check" style="width: 24px; height: 24px;"></i>
+                        </div>
+                        <h4 class="fw-bold text-dark mb-2">B. Smart Email Assistant</h4>
+                        <p class="text-secondary small mb-3">
+                            Instant email processing with categorical sorting (Important, Finance, Urgent), sentiment classification, task and deadline extraction, and multi-tone reply drafting.
+                        </p>
+                        <ul class="list-unstyled small text-secondary space-y-1 mb-0">
+                            <li><i data-lucide="check" class="text-primary me-1" style="width:14px;"></i> Professional, Friendly & Formal tones</li>
+                            <li><i data-lucide="check" class="text-primary me-1" style="width:14px;"></i> Task & deadline extraction</li>
+                            <li><i data-lucide="check" class="text-primary me-1" style="width:14px;"></i> Human-in-the-loop review control</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Module C -->
+                <div class="col-md-4">
+                    <div class="clario-card h-100 clario-card-hover">
+                        <div class="d-inline-flex p-3 rounded-3 text-white mb-3 shadow-sm" style="background-color: #0F172A;">
+                            <i data-lucide="shield-alert" style="width: 24px; height: 24px;"></i>
+                        </div>
+                        <h4 class="fw-bold text-dark mb-2">C. CLARIO Security AI</h4>
+                        <p class="text-secondary small mb-3">
+                            Financial transaction surveillance combining deterministic rules (duplicate charges, velocity bursts) with Scikit-Learn IsolationForest machine learning anomaly detection.
+                        </p>
+                        <ul class="list-unstyled small text-secondary space-y-1 mb-0">
+                            <li><i data-lucide="check" class="text-primary me-1" style="width:14px;"></i> Hybrid ML & rule-based scoring</li>
+                            <li><i data-lucide="check" class="text-primary me-1" style="width:14px;"></i> Clear LOW / MEDIUM / HIGH risk ratings</li>
+                            <li><i data-lucide="check" class="text-primary me-1" style="width:14px;"></i> Explainable fraud alert reasoning</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 5. AI AGENTS SHOWCASE -->
+    <section class="py-5" id="agents">
+        <div class="container py-4">
+            <div class="text-center mb-5">
+                <span class="badge badge-soft-purple text-uppercase px-3 py-1 mb-2">Agent Orchestration</span>
+                <h2 class="fw-bold text-dark">Meet the 6 Specialized AI Agents</h2>
+                <p class="text-secondary mx-auto" style="max-width: 600px;">Every user action routes through our Master Agent orchestrator to specialized autonomous sub-agents executing real backend workflows.</p>
+            </div>
+
+            <div class="row g-4">
+                <div class="col-md-4 col-sm-6">
+                    <div class="p-3 border rounded-3 bg-white h-100">
+                        <div class="fw-bold text-dark d-flex align-items-center gap-2 mb-1">
+                            <i data-lucide="cpu" class="text-primary" style="width:18px;"></i> Master Orchestrator
+                        </div>
+                        <p class="text-muted small mb-0">Decomposes natural language queries, selects tools, coordinates specialists, and synthesizes final reports.</p>
+                    </div>
+                </div>
+                <div class="col-md-4 col-sm-6">
+                    <div class="p-3 border rounded-3 bg-white h-100">
+                        <div class="fw-bold text-dark d-flex align-items-center gap-2 mb-1">
+                            <i data-lucide="file-text" class="text-primary" style="width:18px;"></i> Document Agent
+                        </div>
+                        <p class="text-muted small mb-0">Parses multi-format files, extracts key entities & dates, and provides strictly grounded Q&A.</p>
+                    </div>
+                </div>
+                <div class="col-md-4 col-sm-6">
+                    <div class="p-3 border rounded-3 bg-white h-100">
+                        <div class="fw-bold text-dark d-flex align-items-center gap-2 mb-1">
+                            <i data-lucide="mail" class="text-primary" style="width:18px;"></i> Email Agent
+                        </div>
+                        <p class="text-muted small mb-0">Calculates urgency ratings, extracts actionable tasks, and drafts high-EQ contextual replies.</p>
+                    </div>
+                </div>
+                <div class="col-md-4 col-sm-6">
+                    <div class="p-3 border rounded-3 bg-white h-100">
+                        <div class="fw-bold text-dark d-flex align-items-center gap-2 mb-1">
+                            <i data-lucide="shield" class="text-primary" style="width:18px;"></i> Security Agent
+                        </div>
+                        <p class="text-muted small mb-0">Executes IsolationForest anomaly scans, detects duplicate charges, and generates risk explanations.</p>
+                    </div>
+                </div>
+                <div class="col-md-4 col-sm-6">
+                    <div class="p-3 border rounded-3 bg-white h-100">
+                        <div class="fw-bold text-dark d-flex align-items-center gap-2 mb-1">
+                            <i data-lucide="search" class="text-primary" style="width:18px;"></i> Research Agent
+                        </div>
+                        <p class="text-muted small mb-0">Cross-references workspace files, inbox records, and transaction logs for deep intelligence queries.</p>
+                    </div>
+                </div>
+                <div class="col-md-4 col-sm-6">
+                    <div class="p-3 border rounded-3 bg-white h-100">
+                        <div class="fw-bold text-dark d-flex align-items-center gap-2 mb-1">
+                            <i data-lucide="pie-chart" class="text-primary" style="width:18px;"></i> Report Agent
+                        </div>
+                        <p class="text-muted small mb-0">Aggregates cross-module activity metrics and compiles downloadable executive summaries.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 6. HOW CLARIO WORKS -->
+    <section class="py-5 bg-light border-top border-bottom" id="how-it-works">
+        <div class="container py-4">
+            <div class="text-center mb-5">
+                <span class="badge badge-soft-primary text-uppercase px-3 py-1 mb-2">Workflow</span>
+                <h2 class="fw-bold text-dark">How Clario Operates in 3 Simple Steps</h2>
+            </div>
+            <div class="row g-4 text-center">
+                <div class="col-md-4">
+                    <div class="p-4 bg-white border rounded-4 h-100">
+                        <div class="rounded-circle bg-primary-subtle text-primary fw-bold mx-auto mb-3 d-flex align-items-center justify-content-center" style="width:48px;height:48px;font-size:1.2rem;">1</div>
+                        <h5 class="fw-bold text-dark">Connect & Ingest</h5>
+                        <p class="text-secondary small mb-0">Upload documents, paste email communications, or import transaction CSV datasets into your secure sandbox.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="p-4 bg-white border rounded-4 h-100">
+                        <div class="rounded-circle bg-primary-subtle text-primary fw-bold mx-auto mb-3 d-flex align-items-center justify-content-center" style="width:48px;height:48px;font-size:1.2rem;">2</div>
+                        <h5 class="fw-bold text-dark">Autonomous Processing</h5>
+                        <p class="text-secondary small mb-0">Master Agent coordinates specialized agents to extract entities, analyze sentiment, and run Isolation Forest anomaly detection.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="p-4 bg-white border rounded-4 h-100">
+                        <div class="rounded-circle bg-primary-subtle text-primary fw-bold mx-auto mb-3 d-flex align-items-center justify-content-center" style="width:48px;height:48px;font-size:1.2rem;">3</div>
+                        <h5 class="fw-bold text-dark">Take Action with Confidence</h5>
+                        <p class="text-secondary small mb-0">Approve drafted replies, resolve security alerts, chat with documents, and export board-ready executive reports.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 7. PAYPAL-POWERED SUBSCRIPTION PLANS -->
+    <section class="py-5" id="pricing">
+        <div class="container py-4">
+            <div class="text-center mb-5">
+                <span class="badge badge-soft-success text-uppercase px-3 py-1 mb-2">Transparent Plans</span>
+                <h2 class="fw-bold text-dark">PayPal-Powered Subscription Plans</h2>
+                <p class="text-secondary mx-auto" style="max-width: 600px;">Start on our Free Starter tier and upgrade anytime via PayPal Sandbox for complete access.</p>
+            </div>
+
+            <div class="row justify-content-center g-4">
+                <!-- Free Plan -->
+                <div class="col-lg-5 col-md-6">
+                    <div class="clario-card h-100 d-flex flex-column">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h4 class="fw-bold text-dark mb-0">Free Starter</h4>
+                            <span class="badge bg-light text-dark border">Basic</span>
+                        </div>
+                        <div class="display-5 fw-extrabold text-dark mb-3">$0 <span class="fs-6 fw-normal text-muted">/ forever</span></div>
+                        <p class="text-secondary small mb-4">Essential document scanning and email analysis for individual power users.</p>
+                        
+                        <ul class="list-unstyled space-y-2 small text-secondary flex-grow-1 mb-4">
+                            <li class="d-flex align-items-center gap-2"><i data-lucide="check" class="text-success" style="width:16px;"></i> 5 Document uploads limit</li>
+                            <li class="d-flex align-items-center gap-2"><i data-lucide="check" class="text-success" style="width:16px;"></i> 25 AI Requests per day</li>
+                            <li class="d-flex align-items-center gap-2"><i data-lucide="check" class="text-success" style="width:16px;"></i> Standard Email Assistant</li>
+                            <li class="d-flex align-items-center gap-2"><i data-lucide="check" class="text-success" style="width:16px;"></i> Basic Transaction Anomaly Scan</li>
+                            <li class="d-flex align-items-center gap-2"><i data-lucide="check" class="text-success" style="width:16px;"></i> Community Support</li>
+                        </ul>
+
+                        <a href="{{ url_for('auth.register') }}" class="btn btn-clario-outline w-100 py-2">Get Started Free</a>
+                    </div>
+                </div>
+
+                <!-- Pro Plan -->
+                <div class="col-lg-5 col-md-6">
+                    <div class="clario-card h-100 d-flex flex-column border-primary position-relative shadow-lg" style="border-width: 2px;">
+                        <span class="position-absolute top-0 start-50 translate-middle badge bg-primary px-3 py-1 rounded-pill">MOST POPULAR</span>
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h4 class="fw-bold text-dark mb-0">Clario Professional</h4>
+                            <span class="badge bg-primary text-white">Full Suite</span>
+                        </div>
+                        <div class="display-5 fw-extrabold text-dark mb-3">$29 <span class="fs-6 fw-normal text-muted">/ month</span></div>
+                        <p class="text-secondary small mb-4">Unconstrained multi-agent orchestration, priority Gemini processing, and advanced ML fraud security.</p>
+                        
+                        <ul class="list-unstyled space-y-2 small text-secondary flex-grow-1 mb-4">
+                            <li class="d-flex align-items-center gap-2"><i data-lucide="check" class="text-primary" style="width:16px;"></i> <strong>Unlimited</strong> Document Uploads</li>
+                            <li class="d-flex align-items-center gap-2"><i data-lucide="check" class="text-primary" style="width:16px;"></i> <strong>500</strong> AI Requests per day</li>
+                            <li class="d-flex align-items-center gap-2"><i data-lucide="check" class="text-primary" style="width:16px;"></i> Multi-Agent Autonomous Orchestrator</li>
+                            <li class="d-flex align-items-center gap-2"><i data-lucide="check" class="text-primary" style="width:16px;"></i> Isolation Forest ML Fraud Detection</li>
+                            <li class="d-flex align-items-center gap-2"><i data-lucide="check" class="text-primary" style="width:16px;"></i> Executive PDF/Markdown Reports</li>
+                            <li class="d-flex align-items-center gap-2"><i data-lucide="check" class="text-primary" style="width:16px;"></i> Verified PayPal Sandbox Checkout</li>
+                        </ul>
+
+                        <a href="{{ url_for('auth.register') }}" class="btn btn-clario-primary w-100 py-2">Upgrade with PayPal Sandbox</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 8. SECURITY SECTION -->
+    <section class="py-5 bg-light border-top border-bottom" id="security">
+        <div class="container py-4">
+            <div class="row align-items-center gy-4">
+                <div class="col-lg-6">
+                    <span class="badge badge-soft-danger text-uppercase px-3 py-1 mb-2">Zero-Trust Framework</span>
+                    <h2 class="fw-bold text-dark mb-3">Engineered with Security at Every Layer</h2>
+                    <p class="text-secondary mb-4">
+                        We safeguard user data with robust cryptographic hashing, sanitized file upload boundaries, role-based access control, server-side PayPal order capture verification, and complete audit logging.
+                    </p>
+                    <div class="row g-3">
+                        <div class="col-sm-6">
+                            <div class="p-3 bg-white rounded-3 border">
+                                <div class="fw-bold text-dark small mb-1">Server-Side Verification</div>
+                                <div class="text-muted small">No client-side payment trust. Webhook verification & idempotent captures.</div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="p-3 bg-white rounded-3 border">
+                                <div class="fw-bold text-dark small mb-1">Safe File Sandboxing</div>
+                                <div class="text-muted small">Secure filenames, mime verification, and strict chunked parsers.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="p-4 bg-dark text-white rounded-4 shadow font-mono small">
+                        <div class="text-muted mb-2">// Clario Security Architecture Verification</div>
+                        <div class="text-success">✓ Password Hashing: PBKDF2 / SHA256 active</div>
+                        <div class="text-success">✓ Session Authentication: Flask-Login with secure cookies</div>
+                        <div class="text-success">✓ ML Model: Scikit-Learn IsolationForest (Contamination=0.08)</div>
+                        <div class="text-success">✓ Payment Gateway: PayPal REST v2 API Verified</div>
+                        <div class="text-success">✓ Audit Trail: Complete system actions recorded to AuditLog</div>
+                        <div class="text-info mt-3">// Status: Operational • All Safeguards Active</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 9. FAQ -->
+    <section class="py-5" id="faq">
+        <div class="container py-4" style="max-width: 800px;">
+            <div class="text-center mb-5">
+                <span class="badge badge-soft-primary text-uppercase px-3 py-1 mb-2">Questions & Answers</span>
+                <h2 class="fw-bold text-dark">Frequently Asked Questions</h2>
+            </div>
+
+            <div class="accordion shadow-sm rounded-3 overflow-hidden" id="faqAccordion">
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
+                            What document formats does CLARIO AI Workspace support?
+                        </button>
+                    </h2>
+                    <div id="faq1" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body text-secondary small">
+                            CLARIO natively extracts and parses PDF documents (via PyMuPDF), Word files (DOCX via python-docx), Plain text files (TXT), and CSV datasets (via Pandas) with automated statistical summary tables and Chart.js visualizations.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
+                            How does Clario detect fraudulent or anomalous transactions?
+                        </button>
+                    </h2>
+                    <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body text-secondary small">
+                            We use a hybrid detection engine: deterministic rules catch rapid transaction velocity bursts and exact duplicate charges within time windows, while Scikit-Learn's unsupervised Isolation Forest models multidimensional anomalies across amounts, categories, and intervals.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
+                            Can I use CLARIO without a Google Gemini API Key?
+                        </button>
+                    </h2>
+                    <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body text-secondary small">
+                            Yes! CLARIO features a resilient built-in deterministic intelligence engine that processes documents, categorizes emails, and audits transactions out of the box. You can connect your live Google Gemini API key anytime in Settings for live model inference.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#faq4">
+                            How does the PayPal Sandbox payment work?
+                        </button>
+                    </h2>
+                    <div id="faq4" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body text-secondary small">
+                            All checkout actions route through PayPal's official REST v2 orders and capture endpoints. Upgrades are verified server-side with zero storage of credit card numbers, granting instant access to the Clario Pro tier.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 10. FOOTER -->
+    <footer class="py-5 bg-dark text-white border-top">
+        <div class="container">
+            <div class="row g-4 mb-4">
+                <div class="col-lg-4">
+                    <div class="d-flex align-items-center gap-2 mb-3">
+                        <div class="d-flex align-items-center justify-content-center rounded-3 bg-primary text-white" style="width: 32px; height: 32px;">
+                            <i data-lucide="shield-check" style="width: 18px; height: 18px;"></i>
+                        </div>
+                        <span class="fs-4 fw-bold text-white tracking-tight">CLARIO</span>
+                    </div>
+                    <p class="text-secondary small mb-3">Unified AI Workspace, Intelligent Communication & Payment Security Platform. Built for modern high-velocity organizations.</p>
+                    <div class="text-secondary small">© 2026 CLARIO Intelligence Systems. All rights reserved.</div>
+                </div>
+
+                <div class="col-lg-2 col-6">
+                    <div class="fw-bold small text-white text-uppercase mb-3">Modules</div>
+                    <ul class="list-unstyled small space-y-2 text-secondary">
+                        <li><a href="{{ url_for('workspace.workspace_view') }}" class="text-secondary text-decoration-none">AI Workspace</a></li>
+                        <li><a href="{{ url_for('email.email_view') }}" class="text-secondary text-decoration-none">Email Assistant</a></li>
+                        <li><a href="{{ url_for('security.security_view') }}" class="text-secondary text-decoration-none">Security AI</a></li>
+                        <li><a href="{{ url_for('agents.agents_view') }}" class="text-secondary text-decoration-none">Multi-Agent AI</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-lg-2 col-6">
+                    <div class="fw-bold small text-white text-uppercase mb-3">Platform</div>
+                    <ul class="list-unstyled small space-y-2 text-secondary">
+                        <li><a href="#pricing" class="text-secondary text-decoration-none">Pricing</a></li>
+                        <li><a href="{{ url_for('payments.payments_view') }}" class="text-secondary text-decoration-none">PayPal Checkout</a></li>
+                        <li><a href="#security" class="text-secondary text-decoration-none">Security Architecture</a></li>
+                        <li><a href="{{ url_for('auth.login') }}" class="text-secondary text-decoration-none">Client Portal</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-lg-4">
+                    <div class="fw-bold small text-white text-uppercase mb-3">Compliance & Verification</div>
+                    <p class="text-secondary small mb-2">Designed according to zero-trust FinTech architectural standards. External actions require explicit human approval.</p>
+                    <span class="badge bg-secondary-subtle text-secondary border border-secondary-subtle">PayPal Sandbox Verified</span>
+                    <span class="badge bg-secondary-subtle text-secondary border border-secondary-subtle ms-1">Gemini AI Enabled</span>
+                </div>
+            </div>
+        </div>
+    </footer>
+</div>
+{% endblock %}

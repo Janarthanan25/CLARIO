@@ -1,0 +1,215 @@
+{% extends "base.html" %}
+
+{% block title %}Security AI – CLARIO Financial Defense{% endblock %}
+{% block page_title %}Security AI & Payment Defense{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-2">
+    <!-- Header -->
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
+        <div>
+            <h3 class="fw-bold text-dark mb-1">Financial Transaction Security AI</h3>
+            <p class="text-secondary small mb-0">Hybrid rule engine & Scikit-Learn IsolationForest anomaly detection for payment defense.</p>
+        </div>
+        <div class="d-flex align-items-center gap-2">
+            <button class="btn btn-clario-outline btn-sm d-flex align-items-center gap-1" id="loadDemoTransactionsBtn">
+                <i data-lucide="database" style="width:14px;height:14px;"></i> Load Demo Dataset
+            </button>
+            <label class="btn btn-clario-primary btn-sm d-flex align-items-center gap-1 mb-0 cursor-pointer">
+                <i data-lucide="upload" style="width:14px;height:14px;"></i> Upload CSV
+                <input type="file" id="txCsvFileInput" class="d-none" accept=".csv">
+            </label>
+        </div>
+    </div>
+
+    <!-- Alert / Notice Box -->
+    <div class="alert alert-light border small text-secondary d-flex align-items-center gap-2 mb-4">
+        <i data-lucide="info" class="text-primary" style="width:18px;height:18px;"></i>
+        <span><strong>Compliance Safeguard:</strong> Risk scores are indicative statistical confidence metrics and do not constitute definitive legal accusations. Human verification is required before taking irreversible funds action.</span>
+    </div>
+
+    <!-- 4 SUMMARY METRICS CARDS -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-3 col-sm-6">
+            <div class="clario-card p-3 h-100">
+                <div class="text-secondary small mb-1">Audited Transactions</div>
+                <div class="fs-4 fw-bold text-dark" id="secTotalTxCount">{{ transactions|length }}</div>
+                <div class="text-muted small" style="font-size:0.75rem;">Total rows processed</div>
+            </div>
+        </div>
+        <div class="col-md-3 col-sm-6">
+            <div class="clario-card p-3 h-100">
+                <div class="text-secondary small mb-1">High Risk Detected</div>
+                <div class="fs-4 fw-bold text-danger" id="secHighRiskCount">
+                    {{ alerts|length }}
+                </div>
+                <div class="text-muted small" style="font-size:0.75rem;">Requiring manual review</div>
+            </div>
+        </div>
+        <div class="col-md-3 col-sm-6">
+            <div class="clario-card p-3 h-100">
+                <div class="text-secondary small mb-1">Duplicate Charges</div>
+                <div class="fs-4 fw-bold text-warning" id="secDuplicateCount">0</div>
+                <div class="text-muted small" style="font-size:0.75rem;">Identical party within 1 hr</div>
+            </div>
+        </div>
+        <div class="col-md-3 col-sm-6">
+            <div class="clario-card p-3 h-100">
+                <div class="text-secondary small mb-1">Average Risk Rating</div>
+                <div class="fs-4 fw-bold text-primary" id="secAvgRiskScore">0.0 / 100</div>
+                <div class="text-muted small" style="font-size:0.75rem;">Indicative confidence</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TRANSACTIONS AUDIT TABLE -->
+    <div class="clario-card p-4">
+        <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center pb-3 border-bottom mb-3 gap-2">
+            <div>
+                <h6 class="fw-bold text-dark mb-0">Transaction Surveillance Registry</h6>
+                <small class="text-secondary">Evaluated via IsolationForest ML model & Velocity Rule Matrix</small>
+            </div>
+            <div class="d-flex align-items-center gap-2">
+                <span class="badge bg-light text-dark border" id="secBatchBadge">Default View</span>
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0" id="txSecurityTable">
+                <thead class="table-light small text-secondary">
+                    <tr>
+                        <th>Transaction ID</th>
+                        <th>Amount</th>
+                        <th>Sender / Recipient</th>
+                        <th>Risk Score</th>
+                        <th>Risk Level</th>
+                        <th>Detected Indicators</th>
+                        <th>Review Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody class="small" id="txSecurityTableBody">
+                    {% if transactions %}
+                        {% for tx in transactions %}
+                            {% set risk = tx.risk_result %}
+                            <tr data-tx-id="{{ tx.id }}">
+                                <td class="fw-semibold font-mono text-dark">{{ tx.external_tx_id }}</td>
+                                <td class="fw-bold text-dark">${{ "%.2f"|format(tx.amount) }} {{ tx.currency }}</td>
+                                <td>
+                                    <div class="text-truncate" style="max-width: 180px;">{{ tx.sender }} → {{ tx.recipient }}</div>
+                                    <small class="text-muted">{{ tx.category }}</small>
+                                </td>
+                                <td>
+                                    <div class="fw-bold {% if risk and risk.risk_level == 'HIGH' %}text-danger{% elif risk and risk.risk_level == 'MEDIUM' %}text-warning{% else %}text-success{% endif %}">
+                                        {{ risk.risk_score|round(1) if risk else 15.0 }}
+                                    </div>
+                                </td>
+                                <td>
+                                    {% if risk and risk.risk_level == 'HIGH' %}
+                                        <span class="badge badge-soft-danger">HIGH RISK</span>
+                                    {% elif risk and risk.risk_level == 'MEDIUM' %}
+                                        <span class="badge badge-soft-warning">MEDIUM</span>
+                                    {% else %}
+                                        <span class="badge badge-soft-success">LOW</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <small class="text-secondary" style="max-width: 200px; display: inline-block;">
+                                        {% if risk and risk.get_indicators() %}
+                                            {{ risk.get_indicators()[0] }}
+                                        {% else %}
+                                            Conforms to baseline
+                                        {% endif %}
+                                    </small>
+                                </td>
+                                <td>
+                                    <span class="badge {% if risk and risk.review_status == 'approved' %}bg-success-subtle text-success{% elif risk and risk.review_status == 'flagged_fraud' %}bg-danger-subtle text-danger{% else %}bg-secondary-subtle text-secondary{% endif %}" id="statusBadge-{{ tx.id }}">
+                                        {{ risk.review_status|upper if risk else 'PENDING' }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <button class="btn btn-sm btn-clario-outline view-details-btn py-1 px-2" 
+                                            data-tx='{{ tx.to_dict()|tojson }}'>
+                                        <i data-lucide="eye" style="width:14px;height:14px;"></i> Details
+                                    </button>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr id="noTxRow">
+                            <td colspan="8" class="text-center py-5 text-muted">
+                                <i data-lucide="shield" style="width:32px;height:32px;" class="mb-2 text-secondary"></i>
+                                <div>No transactions currently monitored</div>
+                                <div class="mt-2">
+                                    <button class="btn btn-sm btn-clario-primary" id="tableLoadDemoBtn">Load Sample Demonstration Dataset</button>
+                                </div>
+                            </td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- TRANSACTION REVIEW & DETAILS MODAL -->
+<div class="modal fade" id="txReviewModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content border-0 shadow-lg">
+            <div class="modal-header border-bottom">
+                <div class="d-flex align-items-center gap-2">
+                    <div class="p-2 bg-light rounded text-primary"><i data-lucide="shield-check" style="width:18px;height:18px;"></i></div>
+                    <h5 class="modal-title fw-bold text-dark" id="modalTxId">TX-0000</h5>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body p-4">
+                <div class="row g-3 mb-3">
+                    <div class="col-md-4">
+                        <div class="p-3 bg-light rounded-3 border">
+                            <small class="text-secondary">Amount</small>
+                            <h5 class="fw-bold text-dark mb-0" id="modalAmount">$0.00</h5>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="p-3 bg-light rounded-3 border">
+                            <small class="text-secondary">Indicative Risk Score</small>
+                            <h5 class="fw-bold text-primary mb-0" id="modalRiskScore">0.0 / 100</h5>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="p-3 bg-light rounded-3 border">
+                            <small class="text-secondary">Risk Level</small>
+                            <h5 class="fw-bold text-dark mb-0" id="modalRiskLevel">LOW</h5>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="p-3 border rounded-3 bg-white mb-3">
+                    <strong class="small text-dark d-block mb-1">Detected Risk Indicators:</strong>
+                    <ul class="small text-secondary mb-0 ps-3" id="modalIndicatorsList"></ul>
+                </div>
+
+                <div class="p-3 bg-light rounded-3 border mb-3">
+                    <strong class="small text-dark d-block mb-1">AI Explanation & Analysis:</strong>
+                    <div class="clario-markdown-body small text-secondary mb-0" id="modalExplanation"></div>
+                </div>
+
+                <div class="p-3 border-start border-primary border-3 bg-white shadow-sm rounded-2">
+                    <strong class="small text-dark d-block mb-1">Recommended Action:</strong>
+                    <span class="small text-primary fw-semibold" id="modalRecommendedAction"></span>
+                </div>
+            </div>
+            <div class="modal-footer border-top bg-light">
+                <button type="button" class="btn btn-sm btn-outline-danger" id="modalFlagFraudBtn">Flag as Fraud</button>
+                <button type="button" class="btn btn-sm btn-success" id="modalApproveBtn">Approve Transaction</button>
+                <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{{ url_for('static', filename='js/security.js') }}"></script>
+{% endblock %}

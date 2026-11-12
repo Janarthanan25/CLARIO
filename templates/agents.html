@@ -1,0 +1,198 @@
+{% extends "base.html" %}
+
+{% block title %}AI Agents – CLARIO Orchestration Engine{% endblock %}
+{% block page_title %}Autonomous Multi-Agent Matrix{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-2">
+    <!-- Header -->
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
+        <div>
+            <h3 class="fw-bold text-dark mb-1">Autonomous Multi-Agent Matrix</h3>
+            <p class="text-secondary small mb-0">6 specialized AI agents executing verifiable backend tasks with structured tool orchestration.</p>
+        </div>
+        <div>
+            <span class="badge badge-soft-success d-flex align-items-center gap-1 py-2 px-3">
+                <span class="rounded-circle bg-success" style="width: 8px; height: 8px; display: inline-block;"></span>
+                All 6 Subsystems Operational
+            </span>
+        </div>
+    </div>
+
+    <!-- 6 AGENT STATUS CARDS -->
+    <div class="row g-3 mb-4" id="agentCatalogRow">
+        <div class="col-lg-4 col-md-6">
+            <div class="clario-card p-3 h-100">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <span class="fw-bold text-dark d-flex align-items-center gap-2">
+                        <i data-lucide="cpu" class="text-primary" style="width:18px;"></i> Master Orchestrator
+                    </span>
+                    <span class="badge bg-success-subtle text-success">Active</span>
+                </div>
+                <p class="text-secondary small mb-2">Decomposes natural language requests, formulates execution plans, calls approved tools, and combines specialist responses.</p>
+                <div class="text-muted small font-mono" style="font-size:0.75rem;">Engine: Gemini 1.5 Flash / Intent Matrix</div>
+            </div>
+        </div>
+
+        <div class="col-lg-4 col-md-6">
+            <div class="clario-card p-3 h-100">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <span class="fw-bold text-dark d-flex align-items-center gap-2">
+                        <i data-lucide="file-text" class="text-primary" style="width:18px;"></i> Document Agent
+                    </span>
+                    <span class="badge bg-success-subtle text-success">Active</span>
+                </div>
+                <p class="text-secondary small mb-2">Extracts text from PDF/DOCX/TXT/CSV, extracts entities & dates, and performs context-grounded document Q&A.</p>
+                <div class="text-muted small font-mono" style="font-size:0.75rem;">Engine: PyMuPDF + Docx + AI Summarizer</div>
+            </div>
+        </div>
+
+        <div class="col-lg-4 col-md-6">
+            <div class="clario-card p-3 h-100">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <span class="fw-bold text-dark d-flex align-items-center gap-2">
+                        <i data-lucide="mail" class="text-primary" style="width:18px;"></i> Email Agent
+                    </span>
+                    <span class="badge bg-success-subtle text-success">Active</span>
+                </div>
+                <p class="text-secondary small mb-2">Evaluates sentiment, computes urgency scores, extracts deadlines and actionable tasks, and drafts contextual replies.</p>
+                <div class="text-muted small font-mono" style="font-size:0.75rem;">Engine: NLP Heuristics + Generative Drafter</div>
+            </div>
+        </div>
+
+        <div class="col-lg-4 col-md-6">
+            <div class="clario-card p-3 h-100">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <span class="fw-bold text-dark d-flex align-items-center gap-2">
+                        <i data-lucide="shield-alert" class="text-primary" style="width:18px;"></i> Security Agent
+                    </span>
+                    <span class="badge bg-success-subtle text-success">Active</span>
+                </div>
+                <p class="text-secondary small mb-2">Scans transaction batches for duplicate charges, rapid velocity bursts, and Scikit-Learn IsolationForest anomalies.</p>
+                <div class="text-muted small font-mono" style="font-size:0.75rem;">Engine: Scikit-Learn IsolationForest</div>
+            </div>
+        </div>
+
+        <div class="col-lg-4 col-md-6">
+            <div class="clario-card p-3 h-100">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <span class="fw-bold text-dark d-flex align-items-center gap-2">
+                        <i data-lucide="search" class="text-primary" style="width:18px;"></i> Research Agent
+                    </span>
+                    <span class="badge bg-success-subtle text-success">Active</span>
+                </div>
+                <p class="text-secondary small mb-2">Synthesizes information across uploaded documents, correspondence, and transactions for deep intelligence queries.</p>
+                <div class="text-muted small font-mono" style="font-size:0.75rem;">Engine: Cross-Module Context Synthesizer</div>
+            </div>
+        </div>
+
+        <div class="col-lg-4 col-md-6">
+            <div class="clario-card p-3 h-100">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <span class="fw-bold text-dark d-flex align-items-center gap-2">
+                        <i data-lucide="bar-chart-2" class="text-primary" style="width:18px;"></i> Report Agent
+                    </span>
+                    <span class="badge bg-success-subtle text-success">Active</span>
+                </div>
+                <p class="text-secondary small mb-2">Compiles telemetry, risk distribution, and operational metrics into board-ready executive summaries.</p>
+                <div class="text-muted small font-mono" style="font-size:0.75rem;">Engine: Telemetry Compiler</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- LIVE ORCHESTRATION CONSOLE -->
+    <div class="clario-card p-4 mb-4">
+        <h6 class="fw-bold text-dark mb-2">Live Agent Orchestration Console</h6>
+        <p class="text-secondary small mb-3">Execute an agent command directly. The Master Agent will select tools and dispatch specialist sub-agents.</p>
+
+        <form id="agentConsoleForm">
+            <div class="input-group mb-3">
+                <input type="text" id="agentConsoleInput" class="form-control" placeholder="e.g. Synthesize research on our Q3 financials and security audit risks" required>
+                <button type="submit" class="btn btn-clario-primary px-4" id="agentConsoleBtn">
+                    <span>Execute Workflow</span>
+                </button>
+            </div>
+        </form>
+
+        <div id="agentConsoleOutput" class="p-3 bg-light rounded-3 border d-none">
+            <div class="d-flex justify-content-between align-items-center mb-2 pb-2 border-bottom">
+                <div class="fw-bold small text-dark d-flex align-items-center gap-2">
+                    <i data-lucide="check-circle" class="text-success" style="width:16px;"></i>
+                    <span id="consoleAgentTarget">Master Agent</span>
+                </div>
+                <span class="badge bg-light text-muted border font-mono" id="consoleExecTime">0 ms</span>
+            </div>
+            <div class="mb-2 small text-secondary" id="consoleToolsList"></div>
+            <div class="p-3 bg-white rounded-3 border small text-dark" id="consoleResultText" style="white-space: pre-wrap; line-height: 1.6;"></div>
+        </div>
+    </div>
+
+    <!-- EXECUTION HISTORY AUDIT TABLE -->
+    <div class="clario-card p-4">
+        <div class="d-flex justify-content-between align-items-center pb-3 border-bottom mb-3">
+            <div>
+                <h6 class="fw-bold text-dark mb-0">Agent Execution History</h6>
+                <small class="text-secondary">Verifiable record of real backend agent tasks</small>
+            </div>
+            <span class="badge bg-light text-muted border">Execution Telemetry</span>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light small text-secondary">
+                    <tr>
+                        <th>Agent</th>
+                        <th>Status</th>
+                        <th>Tools Called</th>
+                        <th>Execution Time</th>
+                        <th>Result Summary</th>
+                        <th>Timestamp</th>
+                    </tr>
+                </thead>
+                <tbody class="small" id="agentHistoryTableBody">
+                    {% if history %}
+                        {% for item in history %}
+                            <tr>
+                                <td class="fw-semibold text-dark">
+                                    <span class="badge bg-primary-subtle text-primary border border-primary-subtle">
+                                        {{ item.agent_name|replace('_', ' ')|upper }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="badge {% if item.status == 'completed' %}bg-success-subtle text-success{% else %}bg-danger-subtle text-danger{% endif %}">
+                                        {{ item.status|upper }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <small class="font-mono text-secondary">
+                                        {% for t in item.get_tools_called() %}
+                                            <span class="badge bg-light text-dark border me-1">{{ t }}</span>
+                                        {% endfor %}
+                                    </small>
+                                </td>
+                                <td class="font-mono text-muted">{{ item.execution_time_ms }} ms</td>
+                                <td>
+                                    <div class="text-truncate" style="max-width: 280px;" title="{{ item.result_summary }}">
+                                        {{ item.result_summary }}
+                                    </div>
+                                </td>
+                                <td class="text-muted">{{ item.created_at.strftime('%Y-%m-%d %H:%M') if item.created_at else '' }}</td>
+                            </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="6" class="text-center py-4 text-muted">
+                                No agent executions recorded yet. Run a workflow above to begin.
+                            </td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{{ url_for('static', filename='js/agents.js') }}"></script>
+{% endblock %}

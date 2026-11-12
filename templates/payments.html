@@ -1,0 +1,182 @@
+{% extends "base.html" %}
+
+{% block title %}Payments & Subscriptions – CLARIO Platform{% endblock %}
+{% block page_title %}Payments & Subscription Tier{% endblock %}
+
+{% block extra_head %}
+<!-- PayPal JS SDK (Sandbox Mode) -->
+<script src="https://www.paypal.com/sdk/js?client-id={{ paypal_client_id }}&currency=USD&intent=capture"></script>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-2">
+    <!-- Header -->
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
+        <div>
+            <h3 class="fw-bold text-dark mb-1">Subscription Management & Payments</h3>
+            <p class="text-secondary small mb-0">Secure subscription upgrades via PayPal Sandbox REST API with server-side verification.</p>
+        </div>
+        <div>
+            <span class="badge bg-warning-subtle text-dark border border-warning-subtle py-2 px-3">
+                <i data-lucide="shield-alert" style="width:14px;height:14px;" class="me-1"></i>
+                Environment: PayPal {{ paypal_mode|upper }}
+            </span>
+        </div>
+    </div>
+
+    <!-- Active Subscription Status Banner -->
+    <div class="clario-card p-4 mb-4">
+        <div class="row align-items-center gy-3">
+            <div class="col-md-8">
+                <div class="d-flex align-items-center gap-2 mb-1">
+                    <span class="badge {% if current_user.plan == 'PRO' %}bg-success{% else %}bg-secondary{% endif %} px-3 py-1">
+                        {{ current_user.plan }} PLAN
+                    </span>
+                    <span class="small text-secondary">
+                        Status: <strong class="text-dark">{{ current_user.subscription_status|upper }}</strong>
+                    </span>
+                </div>
+                <h5 class="fw-bold text-dark mb-1">
+                    {% if current_user.plan == 'PRO' %}
+                        You have unlocked Clario Professional Suite
+                    {% else %}
+                        You are currently on the Free Starter Tier
+                    {% endif %}
+                </h5>
+                <p class="text-secondary small mb-0">
+                    {% if current_user.plan == 'PRO' %}
+                        Enjoy unlimited document uploads, 500 AI queries/day, and full multi-agent orchestration.
+                    {% else %}
+                        Upgrade to Clario Pro ($29.00/mo) to unlock unlimited document intelligence and fraud analytics.
+                    {% endif %}
+                </p>
+            </div>
+            <div class="col-md-4 text-md-end">
+                {% if current_user.plan == 'PRO' %}
+                    <span class="btn btn-outline-success btn-sm disabled">
+                        <i data-lucide="check" style="width:14px;height:14px;"></i> Pro Activated
+                    </span>
+                {% else %}
+                    <a href="#plansSection" class="btn btn-clario-primary btn-sm px-3">
+                        Upgrade with PayPal
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- SIDE-BY-SIDE PRICING PLANS -->
+    <div class="row g-4 mb-5" id="plansSection">
+        <!-- Free Tier -->
+        <div class="col-lg-6">
+            <div class="clario-card h-100 p-4 d-flex flex-column">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <h5 class="fw-bold text-dark mb-0">Free Starter</h5>
+                    <span class="badge bg-light text-muted border">Tier 1</span>
+                </div>
+                <div class="display-6 fw-bold text-dark mb-3">$0.00 <span class="fs-6 fw-normal text-muted">/ forever</span></div>
+                <p class="text-secondary small mb-4">Basic document extraction and single-agent email analysis.</p>
+
+                <ul class="list-unstyled space-y-2 small text-secondary flex-grow-1 mb-4">
+                    <li class="d-flex align-items-center gap-2"><i data-lucide="check" class="text-success" style="width:16px;"></i> 5 Document uploads limit</li>
+                    <li class="d-flex align-items-center gap-2"><i data-lucide="check" class="text-success" style="width:16px;"></i> 25 AI Requests per day</li>
+                    <li class="d-flex align-items-center gap-2"><i data-lucide="check" class="text-success" style="width:16px;"></i> Standard Email Assistant</li>
+                    <li class="d-flex align-items-center gap-2"><i data-lucide="check" class="text-success" style="width:16px;"></i> Basic Transaction Anomaly Scan</li>
+                </ul>
+
+                <button class="btn btn-outline-secondary w-100 py-2" disabled>
+                    {% if current_user.plan == 'FREE' %}Current Plan{% else %}Included{% endif %}
+                </button>
+            </div>
+        </div>
+
+        <!-- Pro Tier -->
+        <div class="col-lg-6">
+            <div class="clario-card h-100 p-4 d-flex flex-column border-primary position-relative shadow" style="border-width: 2px;">
+                <span class="position-absolute top-0 end-0 translate-middle badge bg-primary me-4">RECOMMENDED</span>
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <h5 class="fw-bold text-dark mb-0">Clario Professional</h5>
+                    <span class="badge bg-primary text-white">Full Access</span>
+                </div>
+                <div class="display-6 fw-bold text-dark mb-3">$29.00 <span class="fs-6 fw-normal text-muted">/ month</span></div>
+                <p class="text-secondary small mb-4">Unlimited multi-agent orchestration, priority Gemini processing, and ML fraud defense.</p>
+
+                <ul class="list-unstyled space-y-2 small text-secondary flex-grow-1 mb-4">
+                    <li class="d-flex align-items-center gap-2"><i data-lucide="check" class="text-primary" style="width:16px;"></i> <strong>Unlimited</strong> Document Uploads</li>
+                    <li class="d-flex align-items-center gap-2"><i data-lucide="check" class="text-primary" style="width:16px;"></i> <strong>500</strong> AI Requests per day</li>
+                    <li class="d-flex align-items-center gap-2"><i data-lucide="check" class="text-primary" style="width:16px;"></i> Multi-Agent Autonomous Orchestrator</li>
+                    <li class="d-flex align-items-center gap-2"><i data-lucide="check" class="text-primary" style="width:16px;"></i> Isolation Forest ML Fraud Detection</li>
+                    <li class="d-flex align-items-center gap-2"><i data-lucide="check" class="text-primary" style="width:16px;"></i> Executive PDF/Markdown Reports</li>
+                </ul>
+
+                {% if current_user.plan != 'PRO' %}
+                    <!-- PayPal JS SDK Button Container -->
+                    <div id="paypal-button-container" class="mb-2"></div>
+                    <!-- Direct Instant Sandbox Verification Test Button -->
+                    <button type="button" class="btn btn-sm btn-clario-outline w-100 py-2" id="sandboxSimulateUpgradeBtn">
+                        <i data-lucide="zap" style="width:14px;height:14px;" class="text-warning"></i>
+                        Instant Sandbox Verification Test (One-Click)
+                    </button>
+                    <div class="text-muted text-center small mt-2" style="font-size:0.75rem;">Server-side verified • Zero card details stored</div>
+                {% else %}
+                    <div class="p-3 bg-success-subtle text-success rounded-3 text-center small fw-semibold">
+                        <i data-lucide="check-circle" style="width:16px;height:16px;"></i> Clario Pro is Active on your account!
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- PAYMENT HISTORY TABLE -->
+    <div class="clario-card p-4">
+        <div class="d-flex justify-content-between align-items-center pb-3 border-bottom mb-3">
+            <div>
+                <h6 class="fw-bold text-dark mb-0">Payment & Transaction Receipts</h6>
+                <small class="text-secondary">Verified records of server-side PayPal captures</small>
+            </div>
+            <span class="badge bg-light text-muted border">Billing History</span>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light small text-secondary">
+                    <tr>
+                        <th>Order ID</th>
+                        <th>Capture ID</th>
+                        <th>Amount</th>
+                        <th>Payer Email</th>
+                        <th>Gateway</th>
+                        <th>Status</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody class="small" id="paymentHistoryBody">
+                    {% if payments %}
+                        {% for p in payments %}
+                            <tr>
+                                <td class="font-mono fw-semibold text-dark">{{ p.order_id }}</td>
+                                <td class="font-mono text-muted">{{ p.capture_id or 'N/A' }}</td>
+                                <td class="fw-bold text-dark">${{ "%.2f"|format(p.amount) }} {{ p.currency }}</td>
+                                <td class="text-secondary">{{ p.payer_email or current_user.email }}</td>
+                                <td><span class="badge bg-light text-dark border">{{ p.payment_source }}</span></td>
+                                <td><span class="badge bg-success-subtle text-success">{{ p.status }}</span></td>
+                                <td class="text-muted">{{ p.created_at.strftime('%Y-%m-%d %H:%M') if p.created_at else '' }}</td>
+                            </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="7" class="text-center py-4 text-muted">
+                                No payments recorded yet. Upgrade using PayPal Sandbox to test billing.
+                            </td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{{ url_for('static', filename='js/payments.js') }}"></script>
+{% endblock %}

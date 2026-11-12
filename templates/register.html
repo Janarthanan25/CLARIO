@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{% block title %}Create Account – CLARIO AI Platform{% endblock %}
+
+{% block public_content %}
+<div class="container py-5 d-flex justify-content-center align-items-center" style="min-height: 85vh;">
+    <div class="col-md-7 col-lg-5 col-xl-4">
+        <div class="text-center mb-4">
+            <a href="/" class="d-inline-flex align-items-center gap-2 text-decoration-none mb-2">
+                <div class="d-flex align-items-center justify-content-center rounded-3 bg-primary text-white" style="width: 42px; height: 42px;">
+                    <i data-lucide="shield-check" style="width: 24px; height: 24px;"></i>
+                </div>
+                <span class="fs-3 fw-bold tracking-tight text-dark">CLARIO</span>
+            </a>
+            <h5 class="fw-bold text-dark mb-1">Create your CLARIO account</h5>
+            <p class="text-secondary small">Get started with our free intelligent workspace</p>
+        </div>
+
+        <div class="clario-card p-4">
+            <!-- Flash messages -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }} alert-dismissible fade show small mb-3" role="alert">
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <form method="POST" action="{{ url_for('auth.register') }}">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <div class="mb-3">
+                    <label class="form-label small fw-semibold text-secondary">Full Name</label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-light border-end-0"><i data-lucide="user" style="width:16px;"></i></span>
+                        <input type="text" name="full_name" class="form-control border-start-0 ps-0" placeholder="Sarah Miller" required autofocus>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label small fw-semibold text-secondary">Username</label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-light border-end-0"><i data-lucide="at-sign" style="width:16px;"></i></span>
+                        <input type="text" name="username" class="form-control border-start-0 ps-0" placeholder="sarahmiller" required>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label small fw-semibold text-secondary">Email Address</label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-light border-end-0"><i data-lucide="mail" style="width:16px;"></i></span>
+                        <input type="email" name="email" class="form-control border-start-0 ps-0" placeholder="sarah@example.com" required>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label small fw-semibold text-secondary">Password</label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-light border-end-0"><i data-lucide="lock" style="width:16px;"></i></span>
+                        <input type="password" name="password" class="form-control border-start-0 ps-0" placeholder="At least 6 characters" minlength="6" required>
+                    </div>
+                    <div class="form-text small" style="font-size:0.75rem;">Passwords are securely hashed using PBKDF2.</div>
+                </div>
+
+                <button type="submit" class="btn btn-clario-primary w-100 py-2 mb-2">Create Account</button>
+            </form>
+        </div>
+
+        <div class="text-center mt-4">
+            <span class="text-secondary small">Already have an account? </span>
+            <a href="{{ url_for('auth.login') }}" class="small fw-semibold text-primary text-decoration-none">Sign In</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

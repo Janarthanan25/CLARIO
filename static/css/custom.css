@@ -1,0 +1,423 @@
+/* ==========================================================================
+   CLARIO DESIGN SYSTEM
+   Palette:
+   - Background: #F8FAFC
+   - Sidebar: #FFFFFF
+   - Primary Blue: #2563EB
+   - Secondary Violet: #7C3AED
+   - Accent Cyan: #06B6D4
+   - Main Text: #172033
+   - Secondary Text: #64748B
+   - Border: #E2E8F0
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
+
+:root {
+    --clario-bg: #F8FAFC;
+    --clario-sidebar: #FFFFFF;
+    --clario-primary: #2563EB;
+    --clario-primary-hover: #1D4ED8;
+    --clario-primary-light: #EFF6FF;
+    --clario-violet: #7C3AED;
+    --clario-cyan: #06B6D4;
+    --clario-text-main: #172033;
+    --clario-text-muted: #64748B;
+    --clario-border: #E2E8F0;
+    --clario-card-bg: #FFFFFF;
+    --clario-success: #10B981;
+    --clario-warning: #F59E0B;
+    --clario-danger: #EF4444;
+    --clario-shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --clario-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+    --clario-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -4px rgba(0, 0, 0, 0.05);
+    --clario-radius: 12px;
+    --clario-radius-lg: 16px;
+}
+
+body {
+    background-color: var(--clario-bg);
+    color: var(--clario-text-main);
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+/* Sidebar Styling */
+.clario-sidebar {
+    width: 260px;
+    background-color: var(--clario-sidebar);
+    border-right: 1px solid var(--clario-border);
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1030;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.25s ease-in-out;
+}
+
+.clario-main-content {
+    margin-left: 260px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--clario-bg);
+}
+
+@media (max-width: 991.98px) {
+    .clario-sidebar {
+        transform: translateX(-100%);
+    }
+    .clario-sidebar.show {
+        transform: translateX(0);
+    }
+    .clario-main-content {
+        margin-left: 0;
+    }
+}
+
+/* Sidebar Nav Items */
+.nav-link-clario {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 16px;
+    color: var(--clario-text-muted);
+    font-weight: 500;
+    font-size: 0.925rem;
+    border-radius: var(--clario-radius);
+    text-decoration: none;
+    transition: all 0.15s ease;
+    margin-bottom: 3px;
+}
+
+.nav-link-clario:hover {
+    color: var(--clario-primary);
+    background-color: var(--clario-primary-light);
+}
+
+.nav-link-clario.active {
+    color: var(--clario-primary);
+    background-color: var(--clario-primary-light);
+    font-weight: 600;
+}
+
+.nav-link-clario svg {
+    width: 18px;
+    height: 18px;
+    stroke-width: 2.2;
+}
+
+/* Topbar */
+.clario-topbar {
+    height: 70px;
+    background-color: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--clario-border);
+    padding: 0 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 1020;
+}
+
+/* Cards & Containers */
+.clario-card {
+    background: var(--clario-card-bg);
+    border: 1px solid var(--clario-border);
+    border-radius: var(--clario-radius);
+    box-shadow: var(--clario-shadow);
+    padding: 24px;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.clario-card-hover:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--clario-shadow-lg);
+}
+
+/* Gradients */
+.gradient-text {
+    background: linear-gradient(135deg, var(--clario-primary) 0%, var(--clario-violet) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.gradient-bg {
+    background: linear-gradient(135deg, var(--clario-primary) 0%, var(--clario-violet) 100%);
+    color: #ffffff;
+}
+
+/* Buttons */
+.btn-clario-primary {
+    background-color: var(--clario-primary);
+    border: 1px solid var(--clario-primary);
+    color: #ffffff;
+    font-weight: 600;
+    border-radius: var(--clario-radius);
+    padding: 9px 20px;
+    transition: all 0.15s ease;
+}
+
+.btn-clario-primary:hover {
+    background-color: var(--clario-primary-hover);
+    border-color: var(--clario-primary-hover);
+    color: #ffffff;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+}
+
+.btn-clario-outline {
+    background-color: transparent;
+    border: 1px solid var(--clario-border);
+    color: var(--clario-text-main);
+    font-weight: 500;
+    border-radius: var(--clario-radius);
+    padding: 9px 18px;
+    transition: all 0.15s ease;
+}
+
+.btn-clario-outline:hover {
+    background-color: #F1F5F9;
+    border-color: #CBD5E1;
+    color: var(--clario-text-main);
+}
+
+/* Badges */
+.badge-soft-primary {
+    background-color: #EFF6FF;
+    color: #2563EB;
+    border: 1px solid #BFDBFE;
+}
+
+.badge-soft-success {
+    background-color: #ECFDF5;
+    color: #059669;
+    border: 1px solid #A7F3D0;
+}
+
+.badge-soft-warning {
+    background-color: #FFFBEB;
+    color: #D97706;
+    border: 1px solid #FDE68A;
+}
+
+.badge-soft-danger {
+    background-color: #FEF2F2;
+    color: #DC2626;
+    border: 1px solid #FECACA;
+}
+
+.badge-soft-purple {
+    background-color: #F5F3FF;
+    color: #7C3AED;
+    border: 1px solid #DDD6FE;
+}
+
+/* Command Center */
+.command-center-box {
+    background: #FFFFFF;
+    border: 2px solid #E0E7FF;
+    border-radius: 16px;
+    box-shadow: 0 10px 25px -5px rgba(37, 99, 235, 0.08);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.command-center-box:focus-within {
+    border-color: var(--clario-primary);
+    box-shadow: 0 10px 25px -3px rgba(37, 99, 235, 0.18);
+}
+
+/* Dropzone */
+.dropzone-area {
+    border: 2px dashed #CBD5E1;
+    border-radius: var(--clario-radius-lg);
+    background-color: #F8FAFC;
+    padding: 40px 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.dropzone-area:hover, .dropzone-area.dragover {
+    border-color: var(--clario-primary);
+    background-color: #EFF6FF;
+}
+
+/* Code and Mono Blocks */
+pre, code, .font-mono {
+    font-family: 'JetBrains Mono', monospace;
+}
+
+.code-block {
+    background-color: #0F172A;
+    color: #E2E8F0;
+    border-radius: 8px;
+    padding: 14px 18px;
+    font-size: 0.85rem;
+    line-height: 1.6;
+    overflow-x: auto;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+::-webkit-scrollbar-thumb {
+    background: #CBD5E1;
+    border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #94A3B8;
+}
+
+/* Skeleton Loading */
+.skeleton {
+    background: linear-gradient(90deg, #F1F5F9 25%, #E2E8F0 50%, #F1F5F9 75%);
+    background-size: 200% 100%;
+    animation: skeleton-loading 1.5s infinite;
+    border-radius: 6px;
+}
+
+@keyframes skeleton-loading {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+/* ==========================================================================
+   Markdown Rendered Content Styling (.clario-markdown-body)
+   ========================================================================== */
+.clario-markdown-body {
+    color: var(--clario-text-main);
+    line-height: 1.68;
+    font-size: 0.925rem;
+}
+
+.clario-markdown-body h1,
+.clario-markdown-body h2,
+.clario-markdown-body h3,
+.clario-markdown-body h4,
+.clario-markdown-body h5,
+.clario-markdown-body h6 {
+    color: #0F172A;
+    font-weight: 700;
+    margin-top: 1.25rem;
+    margin-bottom: 0.55rem;
+    line-height: 1.35;
+}
+
+.clario-markdown-body h1:first-child,
+.clario-markdown-body h2:first-child,
+.clario-markdown-body h3:first-child {
+    margin-top: 0;
+}
+
+.clario-markdown-body h1 {
+    font-size: 1.35rem;
+    border-bottom: 1px solid var(--clario-border);
+    padding-bottom: 0.35rem;
+}
+
+.clario-markdown-body h2 {
+    font-size: 1.2rem;
+    border-bottom: 1px solid var(--clario-border);
+    padding-bottom: 0.25rem;
+}
+
+.clario-markdown-body h3 {
+    font-size: 1.08rem;
+}
+
+.clario-markdown-body h4 {
+    font-size: 0.98rem;
+}
+
+.clario-markdown-body p {
+    margin-bottom: 0.8rem;
+}
+
+.clario-markdown-body p:last-child {
+    margin-bottom: 0;
+}
+
+.clario-markdown-body ul,
+.clario-markdown-body ol {
+    padding-left: 1.4rem;
+    margin-bottom: 0.85rem;
+}
+
+.clario-markdown-body li {
+    margin-bottom: 0.35rem;
+}
+
+.clario-markdown-body li > p {
+    margin-bottom: 0.25rem;
+}
+
+.clario-markdown-body blockquote {
+    border-left: 3px solid var(--clario-primary);
+    padding: 0.6rem 1rem;
+    background-color: #F8FAFC;
+    border-radius: 0 8px 8px 0;
+    color: #475569;
+    font-style: italic;
+    margin: 1rem 0;
+}
+
+.clario-markdown-body code {
+    background-color: #F1F5F9;
+    color: #0F172A;
+    padding: 0.15rem 0.4rem;
+    border-radius: 4px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.85em;
+    border: 1px solid #E2E8F0;
+}
+
+.clario-markdown-body pre {
+    background-color: #0F172A;
+    color: #E2E8F0;
+    border-radius: 10px;
+    padding: 1rem;
+    overflow-x: auto;
+    margin: 0.9rem 0;
+}
+
+.clario-markdown-body pre code {
+    background-color: transparent;
+    color: inherit;
+    padding: 0;
+    border: none;
+    font-size: 0.85rem;
+}
+
+.clario-markdown-body table {
+    width: 100%;
+    margin-bottom: 1rem;
+    border-collapse: collapse;
+}
+
+.clario-markdown-body th,
+.clario-markdown-body td {
+    padding: 0.5rem 0.75rem;
+    border: 1px solid var(--clario-border);
+    font-size: 0.85rem;
+}
+
+.clario-markdown-body th {
+    background-color: #F8FAFC;
+    font-weight: 600;
+}
+
+.clario-markdown-body hr {
+    border: none;
+    border-top: 1px solid var(--clario-border);
+    margin: 1.25rem 0;
+}

@@ -1,0 +1,162 @@
+{% extends "base.html" %}
+
+{% block title %}Smart Email Assistant – CLARIO Platform{% endblock %}
+{% block page_title %}Smart Email Assistant{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-2">
+    <!-- Header -->
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
+        <div>
+            <h3 class="fw-bold text-dark mb-1">Smart Email Assistant</h3>
+            <p class="text-secondary small mb-0">Automated inbox categorization, sentiment profiling, task/deadline extraction, and multi-tone draft composer.</p>
+        </div>
+        <div class="d-flex align-items-center gap-2">
+            <div class="dropdown">
+                <button class="btn btn-clario-outline btn-sm dropdown-toggle d-flex align-items-center gap-1" type="button" data-bs-toggle="dropdown">
+                    <i data-lucide="mail-open" style="width:14px;height:14px;"></i> Load Sample Email
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end shadow-sm">
+                    <li><h6 class="dropdown-header small text-uppercase">Demonstration Scenarios</h6></li>
+                    {% for sample in sample_emails %}
+                    <li><a class="dropdown-item small load-sample-email-btn" href="#" data-index="{{ loop.index0 }}">{{ sample.subject[:35] }}...</a></li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Grid -->
+    <div class="row g-4">
+        <!-- Left: Email Input & Composition Form -->
+        <div class="col-lg-5">
+            <div class="clario-card p-4 h-100">
+                <div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom">
+                    <h6 class="fw-bold text-dark mb-0">Incoming Email</h6>
+                    <span class="badge badge-soft-primary">Input Source</span>
+                </div>
+
+                <form id="emailAnalysisForm">
+                    <div class="mb-3">
+                        <label class="form-label small fw-semibold text-secondary">Subject</label>
+                        <input type="text" id="emailSubjectInput" class="form-control" placeholder="e.g. Critical Vendor Invoice Verification" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label small fw-semibold text-secondary">Sender Address</label>
+                        <input type="email" id="emailSenderInput" class="form-control" placeholder="stakeholder@company.com" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label small fw-semibold text-secondary">Email Body</label>
+                        <textarea id="emailBodyInput" class="form-control" rows="8" placeholder="Paste incoming email contents here..." required></textarea>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label small fw-semibold text-secondary">Target Response Tone</label>
+                        <div class="btn-group w-100" role="group" id="toneSelectorGroup">
+                            <input type="radio" class="btn-check" name="emailTone" id="toneProf" value="Professional" checked>
+                            <label class="btn btn-outline-primary btn-sm py-2" for="toneProf">Professional</label>
+
+                            <input type="radio" class="btn-check" name="emailTone" id="toneFriendly" value="Friendly">
+                            <label class="btn btn-outline-primary btn-sm py-2" for="toneFriendly">Friendly</label>
+
+                            <input type="radio" class="btn-check" name="emailTone" id="toneFormal" value="Formal">
+                            <label class="btn btn-outline-primary btn-sm py-2" for="toneFormal">Formal</label>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-clario-primary w-100 py-2 d-flex align-items-center justify-content-center gap-2" id="analyzeEmailBtn">
+                        <i data-lucide="sparkles" style="width:16px;height:16px;"></i>
+                        <span>Analyze & Generate Reply</span>
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Right: AI Intelligence & Generated Reply Draft -->
+        <div class="col-lg-7">
+            <!-- Results Container -->
+            <div id="emailResultsView" class="clario-card p-4">
+                <div class="d-flex justify-content-between align-items-center pb-3 border-bottom mb-3">
+                    <div class="d-flex align-items-center gap-2">
+                        <h6 class="fw-bold text-dark mb-0">Intelligence Briefing</h6>
+                        <span class="badge bg-primary text-white" id="emailCategoryBadge">Pending</span>
+                    </div>
+                    <span class="badge badge-soft-success" id="emailSentimentBadge">Sentiment</span>
+                </div>
+
+                <!-- Urgency & Summary Gauge -->
+                <div class="p-3 bg-light rounded-3 border mb-3">
+                    <div class="d-flex justify-content-between align-items-center mb-1">
+                        <span class="small fw-bold text-dark">Urgency Rating</span>
+                        <span class="small fw-bold text-primary" id="emailUrgencyVal">50%</span>
+                    </div>
+                    <div class="progress mb-2" style="height: 6px;">
+                        <div class="progress-bar bg-primary" id="emailUrgencyBar" style="width: 50%;"></div>
+                    </div>
+                    <div class="small text-secondary mt-2" id="emailExecutiveSummary">
+                        Paste an email or select a demonstration scenario on the left to begin analysis.
+                    </div>
+                </div>
+
+                <!-- Tasks & Deadlines Grid -->
+                <div class="row g-3 mb-4">
+                    <div class="col-md-6">
+                        <div class="p-3 border rounded-3 bg-white h-100">
+                            <div class="fw-bold text-dark small mb-2 d-flex align-items-center gap-1">
+                                <i data-lucide="check-square" class="text-primary" style="width:15px;"></i> Action Items
+                            </div>
+                            <ul class="list-unstyled small space-y-1 mb-0" id="emailTasksList">
+                                <li class="text-muted">Awaiting email input...</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="p-3 border rounded-3 bg-white h-100">
+                            <div class="fw-bold text-dark small mb-2 d-flex align-items-center gap-1">
+                                <i data-lucide="clock" class="text-primary" style="width:15px;"></i> Deadlines & Follow-ups
+                            </div>
+                            <ul class="list-unstyled small space-y-1 mb-0" id="emailDeadlinesList">
+                                <li class="text-muted">Awaiting email input...</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Suggested AI Reply Draft -->
+                <div class="border rounded-3 p-3 bg-white">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <div class="d-flex align-items-center gap-2">
+                            <strong class="small text-dark">Drafted Response (<span id="activeReplyToneLabel">Professional</span>)</strong>
+                        </div>
+                        <div class="d-flex gap-2">
+                            <button type="button" class="btn btn-sm btn-clario-outline" id="copyReplyBtn">
+                                <i data-lucide="copy" style="width:14px;height:14px;"></i> Copy Response
+                            </button>
+                            <button type="button" class="btn btn-sm btn-success d-none" id="approveEmailDraftBtn">
+                                <i data-lucide="check-circle" style="width:14px;height:14px;"></i> Approve & Authorize
+                            </button>
+                        </div>
+                    </div>
+
+                    <textarea class="form-control bg-light font-mono small p-3" id="emailReplyDraftArea" rows="7" readonly style="font-size:0.85rem; line-height: 1.6;"></textarea>
+
+                    <div class="mt-2 text-muted small d-flex align-items-center gap-1" style="font-size:0.75rem;">
+                        <i data-lucide="shield-alert" class="text-warning" style="width:14px;height:14px;"></i>
+                        <span>Safe Workflow Guarantee: Clario never sends emails without your explicit external approval.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+window.sampleEmailsData = {{ sample_emails|tojson }};
+</script>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{{ url_for('static', filename='js/email.js') }}"></script>
+{% endblock %}

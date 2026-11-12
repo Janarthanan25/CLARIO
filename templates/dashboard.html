@@ -1,0 +1,182 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard – CLARIO AI Platform{% endblock %}
+{% block page_title %}Dashboard Overview{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-2">
+    <!-- Top Welcome Header -->
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
+        <div>
+            <h3 class="fw-bold text-dark mb-1">Unified Command Center</h3>
+            <p class="text-secondary small mb-0">Cross-module autonomous operations for {{ current_user.full_name or current_user.username }}</p>
+        </div>
+        <div class="d-flex align-items-center gap-2">
+            <a href="{{ url_for('workspace.workspace_view') }}" class="btn btn-clario-outline btn-sm d-flex align-items-center gap-1">
+                <i data-lucide="upload" style="width:14px;height:14px;"></i> Upload Doc
+            </a>
+            <a href="{{ url_for('security.security_view') }}" class="btn btn-clario-primary btn-sm d-flex align-items-center gap-1">
+                <i data-lucide="shield-alert" style="width:14px;height:14px;"></i> Audit Transactions
+            </a>
+        </div>
+    </div>
+
+    <!-- GLOBAL AI COMMAND CENTER -->
+    <div class="command-center-box p-4 mb-4">
+        <div class="d-flex align-items-center justify-content-between mb-2">
+            <div class="d-flex align-items-center gap-2">
+                <div class="p-1 rounded bg-primary text-white"><i data-lucide="sparkles" style="width:16px;height:16px;"></i></div>
+                <span class="fw-bold text-dark small text-uppercase" style="letter-spacing:0.04em;">Global Autonomous Orchestrator</span>
+            </div>
+            <span class="badge badge-soft-primary" id="commandCenterStatusBadge">Master Agent Ready</span>
+        </div>
+        <p class="text-secondary small mb-3">Instruct the Master Agent in natural language. It will select the appropriate specialist agent (Document, Email, Security, Research, or Report) and execute verifiable tasks.</p>
+
+        <form id="globalCommandForm" class="d-flex flex-column flex-md-row gap-2">
+            <input type="text" id="globalCommandInput" class="form-control form-control-lg border shadow-sm fs-6" 
+                   placeholder="e.g. Audit my recent financial transfers and draft an executive security briefing" required>
+            <button type="submit" class="btn btn-clario-primary px-4 py-2 d-flex align-items-center justify-content-center gap-2" id="globalCommandSubmitBtn">
+                <span>Dispatch</span>
+                <i data-lucide="send" style="width:16px;height:16px;"></i>
+            </button>
+        </form>
+
+        <!-- Live Execution Output Area -->
+        <div id="commandExecutionOutput" class="mt-3 p-3 bg-light rounded-3 border d-none">
+            <div class="d-flex align-items-center justify-content-between mb-2 pb-2 border-bottom">
+                <span class="small fw-bold text-dark d-flex align-items-center gap-2">
+                    <i data-lucide="cpu" class="text-primary" style="width:16px;height:16px;"></i>
+                    <span id="commandAgentName">Master Agent</span>
+                </span>
+                <span class="badge bg-secondary-subtle text-secondary" id="commandExecTime">0 ms</span>
+            </div>
+            <div class="small text-secondary mb-2" id="commandRoutingReasoning"></div>
+            <div class="p-3 bg-white rounded-3 border text-dark small" id="commandResultBody" style="white-space: pre-wrap; line-height: 1.6;"></div>
+        </div>
+    </div>
+
+    <!-- 6 KEY METRIC CARDS -->
+    <div class="row g-3 mb-4">
+        <div class="col-xl-2 col-md-4 col-sm-6">
+            <div class="clario-card p-3 h-100">
+                <div class="d-flex align-items-center justify-content-between mb-2">
+                    <span class="text-secondary small fw-medium">Documents</span>
+                    <div class="p-2 bg-primary-subtle text-primary rounded-circle"><i data-lucide="file-text" style="width:16px;height:16px;"></i></div>
+                </div>
+                <div class="fs-4 fw-bold text-dark" id="statDocsAnalyzed">0</div>
+                <div class="text-muted small" style="font-size:0.75rem;">Parsed & indexed</div>
+            </div>
+        </div>
+
+        <div class="col-xl-2 col-md-4 col-sm-6">
+            <div class="clario-card p-3 h-100">
+                <div class="d-flex align-items-center justify-content-between mb-2">
+                    <span class="text-secondary small fw-medium">Emails</span>
+                    <div class="p-2 bg-purple-subtle text-purple rounded-circle" style="background:#F5F3FF; color:#7C3AED;"><i data-lucide="mail" style="width:16px;height:16px;"></i></div>
+                </div>
+                <div class="fs-4 fw-bold text-dark" id="statEmailsProcessed">0</div>
+                <div class="text-muted small" style="font-size:0.75rem;">Categorized & drafted</div>
+            </div>
+        </div>
+
+        <div class="col-xl-2 col-md-4 col-sm-6">
+            <div class="clario-card p-3 h-100">
+                <div class="d-flex align-items-center justify-content-between mb-2">
+                    <span class="text-secondary small fw-medium">Transactions</span>
+                    <div class="p-2 bg-info-subtle text-info rounded-circle"><i data-lucide="activity" style="width:16px;height:16px;"></i></div>
+                </div>
+                <div class="fs-4 fw-bold text-dark" id="statTxsMonitored">0</div>
+                <div class="text-muted small" style="font-size:0.75rem;">Audited for anomalies</div>
+            </div>
+        </div>
+
+        <div class="col-xl-2 col-md-4 col-sm-6">
+            <div class="clario-card p-3 h-100">
+                <div class="d-flex align-items-center justify-content-between mb-2">
+                    <span class="text-secondary small fw-medium">High Risk</span>
+                    <div class="p-2 bg-danger-subtle text-danger rounded-circle"><i data-lucide="alert-triangle" style="width:16px;height:16px;"></i></div>
+                </div>
+                <div class="fs-4 fw-bold text-danger" id="statSuspiciousTxs">0</div>
+                <div class="text-muted small" style="font-size:0.75rem;">Requires human check</div>
+            </div>
+        </div>
+
+        <div class="col-xl-2 col-md-4 col-sm-6">
+            <div class="clario-card p-3 h-100">
+                <div class="d-flex align-items-center justify-content-between mb-2">
+                    <span class="text-secondary small fw-medium">Agent Runs</span>
+                    <div class="p-2 bg-success-subtle text-success rounded-circle"><i data-lucide="bot" style="width:16px;height:16px;"></i></div>
+                </div>
+                <div class="fs-4 fw-bold text-dark" id="statAgentActivity">0</div>
+                <div class="text-muted small" style="font-size:0.75rem;">Executed tasks</div>
+            </div>
+        </div>
+
+        <div class="col-xl-2 col-md-4 col-sm-6">
+            <div class="clario-card p-3 h-100">
+                <div class="d-flex align-items-center justify-content-between mb-2">
+                    <span class="text-secondary small fw-medium">Subscription</span>
+                    <div class="p-2 bg-warning-subtle text-warning rounded-circle"><i data-lucide="credit-card" style="width:16px;height:16px;"></i></div>
+                </div>
+                <div class="fs-5 fw-bold text-dark" id="statPlan">{{ current_user.plan }}</div>
+                <div class="text-muted small" style="font-size:0.75rem;">
+                    <a href="{{ url_for('payments.payments_view') }}" class="text-primary text-decoration-none">Manage plan</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CHARTS & RECENT ACTIVITY SECTION -->
+    <div class="row g-4 mb-4">
+        <!-- Chart 1: Transaction Risk Breakdown -->
+        <div class="col-lg-6">
+            <div class="clario-card h-100">
+                <div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom">
+                    <div>
+                        <h6 class="fw-bold text-dark mb-0">Financial Risk Profile</h6>
+                        <small class="text-secondary">Distribution of evaluated transactions</small>
+                    </div>
+                    <span class="badge badge-soft-primary">Live Data</span>
+                </div>
+                <div style="height: 260px; position: relative;">
+                    <canvas id="riskDistributionChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Chart 2: Module Activity -->
+        <div class="col-lg-6">
+            <div class="clario-card h-100">
+                <div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom">
+                    <div>
+                        <h6 class="fw-bold text-dark mb-0">Platform Utilization</h6>
+                        <small class="text-secondary">Volume across Clario intelligence modules</small>
+                    </div>
+                    <span class="badge badge-soft-primary">Unified Metrics</span>
+                </div>
+                <div style="height: 260px; position: relative;">
+                    <canvas id="moduleUsageChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- RECENT ACTIVITY LOGS -->
+    <div class="clario-card p-4">
+        <div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom">
+            <div>
+                <h6 class="fw-bold text-dark mb-0">Recent Platform Operations</h6>
+                <small class="text-secondary">Verifiable audit record of actions and security verifications</small>
+            </div>
+            <span class="badge bg-light text-muted border">Audit Trail</span>
+        </div>
+        <div id="recentActivityList">
+            <div class="text-center py-4 text-muted small">Loading live activity telemetry...</div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+{% endblock %}

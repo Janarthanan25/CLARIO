@@ -1,0 +1,190 @@
+{% extends "base.html" %}
+
+{% block title %}Settings – CLARIO Platform{% endblock %}
+{% block page_title %}Settings & Integrations{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-2">
+    <!-- Header -->
+    <div class="mb-4">
+        <h3 class="fw-bold text-dark mb-1">Account & Platform Settings</h3>
+        <p class="text-secondary small mb-0">Manage your profile, password security, and Google Gemini AI configurations.</p>
+    </div>
+
+    <div class="row g-4">
+        <!-- Left: Profile & AI Key Configuration -->
+        <div class="col-lg-6">
+            <!-- Gemini API Key Configuration -->
+            <div class="clario-card p-4 mb-4">
+                <div class="d-flex justify-content-between align-items-center pb-2 border-bottom mb-3">
+                    <div class="d-flex align-items-center gap-2">
+                        <div class="p-2 bg-primary-subtle text-primary rounded-circle"><i data-lucide="sparkles" style="width:16px;height:16px;"></i></div>
+                        <h6 class="fw-bold text-dark mb-0">Google Gemini API Configuration</h6>
+                    </div>
+                    <span class="badge {% if is_live %}badge-soft-success{% else %}badge-soft-warning{% endif %}" id="aiStatusBadge">
+                        {% if is_live %}Live Gemini 1.5 Active{% else %}Local Heuristics Engine{% endif %}
+                    </span>
+                </div>
+                <p class="text-secondary small mb-3">
+                    Connect your Google Gemini API key to enable live generative multimodal reasoning and advanced function calling. If left blank, Clario automatically executes deterministic local heuristic analysis.
+                </p>
+
+                <form id="geminiKeyForm">
+                    <div class="mb-3">
+                        <label class="form-label small fw-semibold text-secondary">Gemini API Key</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light border-end-0"><i data-lucide="key" style="width:16px;"></i></span>
+                            <input type="password" id="geminiApiKeyInput" class="form-control border-start-0 ps-0" placeholder="AIzaSy..." value="" autocomplete="off">
+                        </div>
+                        <div class="form-text small" style="font-size:0.75rem;">Current Key Status: <strong>{{ masked_key }}</strong>. Keys are stored securely server-side and never exposed to client browsers.</div>
+                    </div>
+                    <button type="submit" class="btn btn-clario-primary btn-sm px-3" id="saveApiKeyBtn">Save API Key</button>
+                </form>
+            </div>
+
+            <!-- Profile Settings -->
+            <div class="clario-card p-4">
+                <div class="pb-2 border-bottom mb-3">
+                    <h6 class="fw-bold text-dark mb-0">Profile Information</h6>
+                </div>
+                <form id="profileForm">
+                    <div class="mb-3">
+                        <label class="form-label small fw-semibold text-secondary">Full Name</label>
+                        <input type="text" id="profFullName" class="form-control" value="{{ current_user.full_name or '' }}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label small fw-semibold text-secondary">Username</label>
+                        <input type="text" id="profUsername" class="form-control" value="{{ current_user.username }}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label small fw-semibold text-secondary">Email Address</label>
+                        <input type="email" class="form-control" value="{{ current_user.email }}" readonly disabled>
+                        <div class="form-text small" style="font-size:0.75rem;">Email cannot be modified directly for security audit compliance.</div>
+                    </div>
+                    <button type="submit" class="btn btn-clario-primary btn-sm px-3" id="saveProfileBtn">Update Profile</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Right: Security & Password -->
+        <div class="col-lg-6">
+            <!-- Password Update -->
+            <div class="clario-card p-4 mb-4">
+                <div class="pb-2 border-bottom mb-3">
+                    <h6 class="fw-bold text-dark mb-0">Change Password</h6>
+                </div>
+                <form id="passwordForm">
+                    <div class="mb-3">
+                        <label class="form-label small fw-semibold text-secondary">Current Password</label>
+                        <input type="password" id="currentPasswordInput" class="form-control" placeholder="••••••••" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label small fw-semibold text-secondary">New Password</label>
+                        <input type="password" id="newPasswordInput" class="form-control" placeholder="At least 6 characters" minlength="6" required>
+                    </div>
+                    <button type="submit" class="btn btn-clario-outline btn-sm px-3" id="savePasswordBtn">Update Password</button>
+                </form>
+            </div>
+
+            <!-- Subscription Tier Summary -->
+            <div class="clario-card p-4">
+                <div class="d-flex justify-content-between align-items-center pb-2 border-bottom mb-3">
+                    <h6 class="fw-bold text-dark mb-0">Subscription & Quota</h6>
+                    <span class="badge {% if current_user.plan == 'PRO' %}bg-success{% else %}bg-secondary{% endif %}">
+                        {{ current_user.plan }}
+                    </span>
+                </div>
+                <div class="space-y-3 small text-secondary">
+                    <div class="d-flex justify-content-between py-1 border-bottom">
+                        <span>AI Queries Used:</span>
+                        <strong class="text-dark">{{ current_user.ai_requests_count }} / {% if current_user.plan == 'PRO' %}500 per day{% else %}25 per day{% endif %}</strong>
+                    </div>
+                    <div class="d-flex justify-content-between py-1 border-bottom">
+                        <span>Documents Uploaded:</span>
+                        <strong class="text-dark">{{ current_user.documents.count() }} / {% if current_user.plan == 'PRO' %}Unlimited{% else %}5 Max{% endif %}</strong>
+                    </div>
+                    <div class="d-flex justify-content-between py-1 border-bottom">
+                        <span>Payment Gateway:</span>
+                        <strong class="text-dark">PayPal Sandbox</strong>
+                    </div>
+                </div>
+                {% if current_user.plan != 'PRO' %}
+                <div class="mt-3">
+                    <a href="{{ url_for('payments.payments_view') }}" class="btn btn-clario-primary btn-sm w-100">Upgrade to Clario Pro</a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    // API Key Form
+    const keyForm = document.getElementById('geminiKeyForm');
+    keyForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const key = document.getElementById('geminiApiKeyInput').value.trim();
+        fetch('/api/settings/api-key', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ gemini_api_key: key })
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                if (window.showToast) showToast(data.message, 'success');
+                const badge = document.getElementById('aiStatusBadge');
+                if (data.is_live) {
+                    badge.textContent = 'Live Gemini 1.5 Active';
+                    badge.className = 'badge badge-soft-success';
+                }
+            }
+        });
+    });
+
+    // Profile Form
+    const profForm = document.getElementById('profileForm');
+    profForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const full_name = document.getElementById('profFullName').value.trim();
+        const username = document.getElementById('profUsername').value.trim();
+        fetch('/api/settings/profile', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ full_name, username })
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                if (window.showToast) showToast('Profile updated!', 'success');
+            } else {
+                if (window.showToast) showToast(data.error || 'Update failed', 'danger');
+            }
+        });
+    });
+
+    // Password Form
+    const pwForm = document.getElementById('passwordForm');
+    pwForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const current_password = document.getElementById('currentPasswordInput').value;
+        const new_password = document.getElementById('newPasswordInput').value;
+        fetch('/api/settings/password', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ current_password, new_password })
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                pwForm.reset();
+                if (window.showToast) showToast('Password changed successfully!', 'success');
+            } else {
+                if (window.showToast) showToast(data.error || 'Failed to change password', 'danger');
+            }
+        });
+    });
+});
+</script>
+{% endblock %}

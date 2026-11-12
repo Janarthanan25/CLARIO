@@ -1,0 +1,243 @@
+{% extends "base.html" %}
+
+{% block title %}AI Workspace – CLARIO Platform{% endblock %}
+{% block page_title %}AI Document Workspace{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-2">
+    <!-- Header -->
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
+        <div>
+            <h3 class="fw-bold text-dark mb-1">Document Intelligence Workspace</h3>
+            <p class="text-secondary small mb-0">Upload PDF, DOCX, TXT, or CSV documents for grounded Q&A, entity extraction, and automated analytics.</p>
+        </div>
+        <div class="d-flex align-items-center gap-2">
+            <button class="btn btn-clario-outline btn-sm d-flex align-items-center gap-1" id="loadSampleDocBtn">
+                <i data-lucide="file-check" style="width:14px;height:14px;"></i> Load Sample Report
+            </button>
+        </div>
+    </div>
+
+    <!-- Main Workspace Split -->
+    <div class="row g-4">
+        <!-- Left Column: Upload & Document Repository -->
+        <div class="col-lg-4">
+            <!-- Drag & Drop Upload Card -->
+            <div class="clario-card mb-4 p-4">
+                <h6 class="fw-bold text-dark mb-2">Upload Document</h6>
+                <p class="text-secondary small mb-3">Max file size 16MB. Formats: PDF, DOCX, TXT, CSV.</p>
+
+                <div class="dropzone-area" id="docDropzone">
+                    <input type="file" id="fileInput" class="d-none" accept=".pdf,.docx,.txt,.csv">
+                    <div class="p-3 d-inline-flex bg-primary-subtle text-primary rounded-circle mb-3">
+                        <i data-lucide="upload-cloud" style="width:28px;height:28px;"></i>
+                    </div>
+                    <div class="fw-semibold text-dark small mb-1">Drag & drop your file here</div>
+                    <div class="text-muted small mb-3">or click to browse from device</div>
+                    <button type="button" class="btn btn-sm btn-clario-outline" id="browseFileBtn">Browse Files</button>
+                </div>
+
+                <div id="uploadProgressBar" class="progress mt-3 d-none" style="height: 6px;">
+                    <div class="progress-bar progress-bar-striped progress-bar-animated bg-primary" style="width: 100%;"></div>
+                </div>
+            </div>
+
+            <!-- Document Repository / History -->
+            <div class="clario-card p-4">
+                <div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom">
+                    <h6 class="fw-bold text-dark mb-0">Uploaded Documents</h6>
+                    <span class="badge bg-light text-dark border" id="docCountBadge">{{ documents|length }}</span>
+                </div>
+
+                <div id="documentHistoryList" class="space-y-2 overflow-y-auto" style="max-height: 480px;">
+                    {% if documents %}
+                        {% for doc in documents %}
+                            <div class="p-3 border rounded-3 bg-white mb-2 doc-item-card clario-card-hover cursor-pointer" data-doc-id="{{ doc.id }}">
+                                <div class="d-flex align-items-start justify-content-between">
+                                    <div class="d-flex align-items-center gap-2">
+                                        <div class="p-2 bg-light rounded text-primary">
+                                            <i data-lucide="file-text" style="width:16px;height:16px;"></i>
+                                        </div>
+                                        <div>
+                                            <div class="fw-semibold text-dark small text-truncate" style="max-width: 170px;" title="{{ doc.original_filename }}">{{ doc.original_filename }}</div>
+                                            <span class="badge bg-secondary-subtle text-secondary" style="font-size:0.65rem;">{{ doc.file_type|upper }}</span>
+                                            <small class="text-muted" style="font-size:0.7rem;">{{ (doc.file_size / 1024)|round(1) }} KB</small>
+                                        </div>
+                                    </div>
+                                    <button class="btn btn-sm btn-light text-danger delete-doc-btn p-1 border-0" data-doc-id="{{ doc.id }}" title="Delete document">
+                                        <i data-lucide="trash-2" style="width:14px;height:14px;"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="text-center py-5 text-muted small" id="noDocsNotice">
+                            <i data-lucide="file" style="width:32px;height:32px;" class="mb-2 text-secondary"></i>
+                            <div>No documents in workspace</div>
+                            <div class="mt-1">Upload a file or click <strong>Load Sample Report</strong></div>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Column: Document Details, Grounded Q&A, and CSV Analytics -->
+        <div class="col-lg-8">
+            <!-- Active Document Viewer (Hidden until selected or uploaded) -->
+            <div id="activeDocView" class="clario-card p-4 {% if not documents %}d-none{% endif %}">
+                <!-- Document Header -->
+                <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center pb-3 border-bottom mb-4 gap-2">
+                    <div>
+                        <span class="badge badge-soft-primary mb-1" id="activeDocBadge">Document Intelligence</span>
+                        <h4 class="fw-bold text-dark mb-0" id="activeDocTitle">Select a document</h4>
+                        <small class="text-muted" id="activeDocTimestamp"></small>
+                    </div>
+                    <div class="d-flex align-items-center gap-2">
+                        <a href="#" id="downloadReportBtn" class="btn btn-sm btn-clario-outline d-flex align-items-center gap-1">
+                            <i data-lucide="download" style="width:14px;height:14px;"></i> Download Report
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Tabs: Executive Summary, Grounded Q&A, Key Data, CSV Analytics -->
+                <ul class="nav nav-tabs mb-4" id="docTabs" role="tablist">
+                    <li class="nav-item">
+                        <button class="nav-link active fw-semibold" id="summary-tab" data-bs-toggle="tab" data-bs-target="#tab-summary" type="button">Executive Summary</button>
+                    </li>
+                    <li class="nav-item">
+                        <button class="nav-link fw-semibold" id="chat-tab" data-bs-toggle="tab" data-bs-target="#tab-chat" type="button">Grounded Q&A</button>
+                    </li>
+                    <li class="nav-item">
+                        <button class="nav-link fw-semibold" id="entities-tab" data-bs-toggle="tab" data-bs-target="#tab-entities" type="button">Key Dates & Entities</button>
+                    </li>
+                    <li class="nav-item d-none" id="csv-tab-item">
+                        <button class="nav-link fw-semibold text-primary" id="csv-tab" data-bs-toggle="tab" data-bs-target="#tab-csv" type="button">CSV Analytics & Charts</button>
+                    </li>
+                </ul>
+
+                <div class="tab-content" id="docTabsContent">
+                    <!-- Tab 1: Executive Summary -->
+                    <div class="tab-pane fade show active" id="tab-summary">
+                        <div class="p-3 bg-light rounded-3 border mb-3">
+                            <div class="fw-bold text-dark small mb-2 d-flex align-items-center gap-2">
+                                <i data-lucide="sparkles" class="text-primary" style="width:16px;"></i> AI Document Summary
+                            </div>
+                            <div class="clario-markdown-body" id="docSummaryText">
+                                <p class="text-secondary small mb-0">Select a document from the left panel to review its executive summary.</p>
+                            </div>
+                        </div>
+
+                        <div class="border rounded-3 p-3">
+                            <div class="fw-semibold text-dark small mb-2">Content Preview</div>
+                            <pre class="bg-light p-3 rounded text-secondary small font-mono mb-0" id="docContentPreview" style="max-height: 250px; overflow-y: auto; white-space: pre-wrap; font-size: 0.8rem;"></pre>
+                        </div>
+                    </div>
+
+                    <!-- Tab 2: Grounded Q&A -->
+                    <div class="tab-pane fade" id="tab-chat">
+                        <div class="alert alert-info py-2 small d-flex align-items-center gap-2 mb-3">
+                            <i data-lucide="shield-check" style="width:16px;height:16px;"></i>
+                            <span>Answers are strictly grounded in this document's text and verified against the uploaded file context.</span>
+                        </div>
+
+                        <!-- Chat Messages Container -->
+                        <div id="qaMessagesList" class="p-3 bg-light rounded-3 border mb-3 space-y-3" style="min-height: 220px; max-height: 380px; overflow-y: auto;">
+                            <div class="text-center py-4 text-muted small">Ask any question about this document below.</div>
+                        </div>
+
+                        <!-- Question Input -->
+                        <form id="docQuestionForm" class="d-flex gap-2">
+                            <input type="text" id="docQuestionInput" class="form-control" placeholder="e.g. What were the quarterly financial commitments and filing deadlines?" required>
+                            <button type="submit" class="btn btn-clario-primary px-3" id="askQuestionBtn">
+                                <i data-lucide="send" style="width:16px;height:16px;"></i>
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Tab 3: Key Dates & Entities -->
+                    <div class="tab-pane fade" id="tab-entities">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <div class="p-3 border rounded-3 bg-white h-100">
+                                    <div class="fw-bold text-dark small mb-2 d-flex align-items-center gap-2">
+                                        <i data-lucide="calendar" class="text-primary" style="width:16px;"></i> Temporal Markers & Deadlines
+                                    </div>
+                                    <ul class="list-unstyled small space-y-1 mb-0" id="keyDatesList">
+                                        <li class="text-muted">No dates extracted.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="p-3 border rounded-3 bg-white h-100">
+                                    <div class="fw-bold text-dark small mb-2 d-flex align-items-center gap-2">
+                                        <i data-lucide="tag" class="text-primary" style="width:16px;"></i> Entities & Financial Figures
+                                    </div>
+                                    <div id="keyEntitiesContainer" class="small text-secondary">
+                                        <span class="text-muted">No entities extracted.</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tab 4: CSV Analytics & Charts -->
+                    <div class="tab-pane fade" id="tab-csv">
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-4">
+                                <div class="p-3 bg-light rounded-3 border text-center">
+                                    <div class="text-secondary small">Total Rows</div>
+                                    <div class="fs-4 fw-bold text-dark" id="csvRowCount">0</div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="p-3 bg-light rounded-3 border text-center">
+                                    <div class="text-secondary small">Total Columns</div>
+                                    <div class="fs-4 fw-bold text-dark" id="csvColCount">0</div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="p-3 bg-light rounded-3 border text-center">
+                                    <div class="text-secondary small">Detected Charts</div>
+                                    <div class="fs-4 fw-bold text-primary" id="csvChartStatus">Ready</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Dynamic Chart Container -->
+                        <div class="p-3 border rounded-3 mb-4" style="height: 300px; position: relative;">
+                            <canvas id="csvDynamicChart"></canvas>
+                        </div>
+
+                        <!-- Data Table Preview -->
+                        <h6 class="fw-bold text-dark small mb-2">First 10 Rows Preview</h6>
+                        <div class="table-responsive border rounded-3" style="max-height: 250px;">
+                            <table class="table table-sm table-striped small mb-0" id="csvPreviewTable">
+                                <thead class="table-light"><tr><th>Columns</th></tr></thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Empty Placeholder (if no document active) -->
+            <div id="emptyWorkspacePlaceholder" class="clario-card p-5 text-center {% if documents %}d-none{% endif %}">
+                <div class="p-3 bg-primary-subtle text-primary rounded-circle d-inline-flex mb-3">
+                    <i data-lucide="file-plus" style="width:36px;height:36px;"></i>
+                </div>
+                <h5 class="fw-bold text-dark mb-1">Your Workspace is Ready</h5>
+                <p class="text-secondary small mx-auto mb-4" style="max-width: 450px;">
+                    Upload a file on the left or click below to load our standard demonstration intelligence report.
+                </p>
+                <button type="button" class="btn btn-clario-primary px-4 py-2" id="placeholderSampleBtn">
+                    Load Demonstration Financial Report
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{{ url_for('static', filename='js/workspace.js') }}"></script>
+{% endblock %}
