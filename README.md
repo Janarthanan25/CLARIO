@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # CLARIO – Unified AI Workspace, Intelligent Communication & Payment Security Platform
 
 [![Python](https://img.shields.io/badge/Python-3.13-3776AB.svg?style=flat&logo=python&logoColor=white)](https://www.python.org/)
@@ -282,3 +283,6 @@ CLARIO/
 
 ## 📄 License
 MIT License. Built for the CLARIO Unified AI Platform.
+=======
+# CLARIO
+>>>>>>> a9822772c4f62eed6e295fab94284a8443cd2bfc
